@@ -55,17 +55,154 @@
     <button>Trigger a Global Error</button>
   </section>
 
+
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "b5cac1c8fbce4f95ba96405ed2821d75"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+                        
+
   <script>
     let calculateBtn = document.querySelector('#calculate');
     calculateBtn.addEventListener('click', () => {
-      let output = document.querySelector('output');
+      try{
+        let output = document.querySelector('output');
+        output.innerHTML = getResult();
+      }catch(err){
+        console.log(err.message);
+        console.log(err.name);
+      }
+    });
+
+    class ValueError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "ValueError";
+      }
+    }
+
+  
+    function getResult(){
+      try{
+        let firstNum = document.querySelector('#first-num').value;
+        let secondNum = document.querySelector('#second-num').value;
+        let operator = document.querySelector('#operator').value;
+        return eval(`${firstNum} ${operator} ${secondNum}`);
+      }catch(err){
+        throw new ValueError('first operant must be filled in before calculate');
+      }finally{
+        console.log('getResult function call ended');
+      }
+    };
+
+    let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+    
+    errorBtns[0].addEventListener('click',()=>{
+      try{
+        let firstNum = document.querySelector('#first-num').value;
+        let secondNum = document.querySelector('#second-num').value;
+        let operator = document.querySelector('#operator').value;
+        let result = eval(`${firstNum} ${operator} ${secondNum}`);
+        console.log(firstNum + operator + secondNum + '=' + result );
+      }catch(err){
+        console.log(err.message);
+      }
+      // console.log('hello world');
+    });
+
+    errorBtns[1].addEventListener('click', () => {
+      let firstNum = document.querySelector('#first-num').value;
+      let secondNum = document.querySelector('#second-num').value;
+      if(firstNum < secondNum){
+        console.error("Your first number is less than the second number");
+      }else{
+        console.error("Your first number is greater than or equal to the second number");
+      }
+    });
+
+    errorBtns[2].addEventListener('click', () => {
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      console.dir(document);
     });
 
-    let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+    errorBtns[3].addEventListener('click', () => {
+      console.dirxml(document.body);
+    });
+    
+    var level = 0;
+    errorBtns[4].addEventListener('click', () => {
+      console.group('we are at level '+ level);
+      level++;
+    });
+
+    errorBtns[5].addEventListener('click', () => {
+      level--;
+      console.groupEnd();
+      console.log('going back to level '+ (level-1));
+    });
+
+
+    errorBtns[6].addEventListener('click', () => {
+      let firstNum = document.querySelector('#first-num').value;
+      let secondNum = document.querySelector('#second-num').value;
+      let operator = document.querySelector('#operator').value;
+      let result = eval(`${firstNum} ${operator} ${secondNum}`);
+      console.table([
+        {
+          'value' : firstNum,
+          'property' : 'frist operant'
+        },
+        {
+          'value' : secondNum,
+          'property' : 'second operant'
+        },
+        {
+          'value' : operator,
+          'property' : 'operator'
+        },
+        {
+          'value' : result,
+          'property' : 'result'
+        }
+      ]);
+    });
+
+    errorBtns[7].addEventListener('click', () => {
+      console.time("timer 1");
+      console.log("timer 1 started");
+    });
+
+    errorBtns[8].addEventListener('click', () => {
+      console.timeEnd("timer 1");
+      console.log("timer 1 ended");
+    });
+
+    errorBtns[9].addEventListener('click', () => {
+      const first = () => { second(); };
+      const second = () => { third(); };
+      const third = () => { fourth(); };
+      const fourth = () => { console.trace("trace of the fourth function call"); fifth(); };
+      const fifth = () => { console.trace("trace of the fifth function call"); };
+      first();
+    });
+
+    
+    errorBtns[10].addEventListener('click', ()=>{
+        window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
+        console.log('Error: ' + errorMsg + ' Script: ' + url + ' Line: ' + lineNumber
+        + ' Column: ' + column + ' StackTrace: ' +  errorObj);
+        console.log('This is an uncaught error');
+        return false;
+      };
+    });
+
+    
+
     // TODO - Make buttons functional
   </script>
 </body>
