@@ -141,9 +141,14 @@
     });
 
     errorBtns[5].addEventListener('click', () => {
-      level--;
-      console.groupEnd();
-      console.log('going back to level '+ (level-1));
+      if(level>0){
+        level--;
+        console.groupEnd();
+        console.log('going back to level '+ (level-1));
+      }else{
+        console.log('no groups yet, try click on Console Group Start');
+      }
+      
     });
 
 
