@@ -92,7 +92,7 @@
         let operator = document.querySelector('#operator').value;
         return eval(`${firstNum} ${operator} ${secondNum}`);
       }catch(err){
-        throw new ValueError('first operant must be filled in before calculate');
+        throw new ValueError('second operant must be filled in before calculate');
       }finally{
         console.log('getResult function call ended');
       }
